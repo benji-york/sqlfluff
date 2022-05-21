@@ -7,95 +7,94 @@ from sqlfluff.core.errors import SQLTemplaterError
 
 
 def test__templater_raw():
-    """Test the templaters when nothing has to be replaced."""
-    t = PlaceholderTemplater(override_context=dict(param_style="colon"))
-    instr = "SELECT * FROM {{blah}} WHERE %(gnepr)s OR e~':'"
-    outstr, _ = t.process(in_str=instr, fname="test")
-    assert str(outstr) == instr
+"""Test the templaters when nothing has to be replaced."""
+t = PlaceholderTemplater(override_context=dict(param_style="colon"))
+instr = "SELECT * FROM {{blah}} WHERE %(gnepr)s OR e~':'"
+outstr, _ = t.process(in_str=instr, fname="test")
+assert str(outstr) == instr
 
 
 @pytest.mark.parametrize(
-    "instr, param_style, expected_outstr, values",
-    [
-        (
-            "SELECT * FROM f, o, o WHERE a < 10\n\n",
-            "colon",
-            "SELECT * FROM f, o, o WHERE a < 10\n\n",
-            dict(
-                unused=7777,
-            ),
+"instr, param_style, expected_outstr, values",
+[
+    (
+        "SELECT * FROM f, o, o WHERE a < 10\n\n",
+        "colon",
+        "SELECT * FROM f, o, o WHERE a < 10\n\n",
+        dict(
+            unused=7777,
         ),
-        (
-            """
-            SELECT user_mail, city_id
-            FROM users_data
-            WHERE userid = :user_id AND date > :start_date
-            """,
-            "colon",
-            """
-            SELECT user_mail, city_id
-            FROM users_data
-            WHERE userid = 42 AND date > '2021-10-01'
-            """,
-            dict(
-                user_id="42",
-                start_date="'2021-10-01'",
-                city_ids="(1, 2, 3, 45)",
-            ),
+    ),
+    (
+        """
+        SELECT user_mail, city_id
+        FROM users_data
+        WHERE userid = :user_id AND date > :start_date
+        """,
+        "colon",
+        """
+        SELECT user_mail, city_id
+        FROM users_data
+        WHERE userid = 42 AND date > '2021-10-01'
+        """,
+        dict(
+            user_id="42",
+            start_date="'2021-10-01'",
+            city_ids="(1, 2, 3, 45)",
         ),
-        (
-            """
-            SELECT user_mail, city_id
-            FROM users_data
-            WHERE userid = :user_id AND date > :start_date""",
-            "colon",
-            """
-            SELECT user_mail, city_id
-            FROM users_data
-            WHERE userid = 42 AND date > '2021-10-01'""",
-            dict(
-                user_id="42",
-                start_date="'2021-10-01'",
-                city_ids="(1, 2, 3, 45)",
-            ),
+    ),
+    (
+        """
+        SELECT user_mail, city_id
+        FROM users_data
+        WHERE userid = :user_id AND date > :start_date""",
+        "colon",
+        """
+        SELECT user_mail, city_id
+        FROM users_data
+        WHERE userid = 42 AND date > '2021-10-01'""",
+        dict(
+            user_id="42",
+            start_date="'2021-10-01'",
+            city_ids="(1, 2, 3, 45)",
         ),
-        (
-            """
-            SELECT user_mail, city_id
-            FROM users_data
-            WHERE (city_id) IN :city_ids
-            AND date > '2020-10-01'
-            """,
-            "colon",
-            """
-            SELECT user_mail, city_id
-            FROM users_data
-            WHERE (city_id) IN (1, 2, 3, 45)
-            AND date > '2020-10-01'
-            """,
-            dict(
-                user_id="42",
-                start_date="'2021-10-01'",
-                city_ids="(1, 2, 3, 45)",
-            ),
+    ),
+    (
+        """
+        SELECT user_mail, city_id
+        FROM users_data
+        WHERE (city_id) IN :city_ids
+        AND date > '2020-10-01'
+        """,
+        "colon",
+        """
+        SELECT user_mail, city_id
+        FROM users_data
+        WHERE (city_id) IN (1, 2, 3, 45)
+        AND date > '2020-10-01'
+        """,
+        dict(
+            user_id="42",
+            start_date="'2021-10-01'",
+            city_ids="(1, 2, 3, 45)",
         ),
-        (
-            """
-            SELECT user_mail, city_id
-            FROM users_data:table_suffix
-            """,
-            "colon_nospaces",
-            """
-            SELECT user_mail, city_id
-            FROM users_data42
-            """,
-            dict(
-                table_suffix="42",
-            ),
+    ),
+    (
+        """
+        SELECT user_mail, city_id
+        FROM users_data:table_suffix
+        """,
+        "colon_nospaces",
+        """
+        SELECT user_mail, city_id
+        FROM users_data42
+        """,
+        dict(
+            table_suffix="42",
         ),
-        (
-            # Postgres uses double-colons for type casts , see
-            # https://www.postgresql.org/docs/current/sql-expressions.html#SQL-SYNTAX-TYPE-CASTS
+    ),
+    (
+            # Postgres uses double-colons for type casts (see https://www.postgresql.org/docs/current/sql-expressions.html#SQL-SYNTAX-TYPE-CASTS).
             # This test ensures we don't confuse them with colon placeholders.
             """
             SELECT user_mail, city_id, joined::date
