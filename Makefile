@@ -26,6 +26,7 @@ build: ve development-utilities
 ve:
 	python3.9 -m venv ve
 	$(pip-install) -r requirements_dev.txt
+	$(pip-install) -e .
 
 ve/bin/%:
 	# Install development utility "$*"
