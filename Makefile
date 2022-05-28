@@ -57,7 +57,7 @@ lint: tox-linting tox-doclinting tox-docbuild tox-yamllint
 
 .PHONY: test
 test:
-	ve/bin/tox -e py -- -n 2 test
+	ve/bin/tox -e py -- -n 16 test
 
 .PHONY: check
 check: lint test
