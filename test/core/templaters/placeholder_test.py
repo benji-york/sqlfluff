@@ -213,6 +213,44 @@ assert str(outstr) == instr
             """
             SELECT user_mail, city_id
             FROM users_data
+            WHERE (city_id) IN ${12}
+            AND date > ${90}
+            """,
+            "numeric_dollar",
+            """
+            SELECT user_mail, city_id
+            FROM users_data
+            WHERE (city_id) IN (1, 2, 3, 45)
+            AND date > '2020-10-01'
+            """,
+            {
+                "12": "(1, 2, 3, 45)",
+                "90": "'2020-10-01'",
+            },
+        ),
+        (
+            """
+            SELECT user_mail, city_id
+            FROM users_data
+            WHERE user_mail = '${12}'
+            AND date > ${90}
+            """,
+            "numeric_dollar",
+            """
+            SELECT user_mail, city_id
+            FROM users_data
+            WHERE user_mail = 'test@example.com'
+            AND date > '2020-10-01'
+            """,
+            {
+                "12": "test@example.com",
+                "90": "'2020-10-01'",
+            },
+        ),
+        (
+            """
+            SELECT user_mail, city_id
+            FROM users_data
             WHERE (city_id) IN %s
             AND date > %s
             """,
@@ -263,6 +301,8 @@ assert str(outstr) == instr
         "pyformat",
         "dollar",
         "numeric_dollar",
+        "numeric_dollar_with_braces",
+        "numeric_dollar_with_braces_and_string",
         "percent",
         "ampersand",
     ],
