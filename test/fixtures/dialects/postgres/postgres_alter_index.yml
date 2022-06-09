@@ -3,7 +3,7 @@
 # computed by SQLFluff when running the tests. Please run
 # `python test/generate_parse_fixture_yml.py`  to generate them after adding or
 # altering SQL files.
-_hash: f45b88d1dea629bb74b5c55a115fdffef381317cf5196779acb827c6d72ebea8
+_hash: 1e23493b45c007d0a989079a97ef6df12ac95685743bfdeb7dd29c2ddd1fa203
 file:
 - statement:
     alter_index_statement:
@@ -126,6 +126,31 @@ file:
     - comma: ','
     - role_reference:
         identifier: steve
+    - keyword: SET
+    - keyword: TABLESPACE
+    - tablespace_reference:
+        identifier: bar
+    - keyword: NOWAIT
+- statement_terminator: ;
+- statement:
+    alter_index_statement:
+    - keyword: ALTER
+    - keyword: INDEX
+    - keyword: ALL
+    - keyword: IN
+    - keyword: TABLESPACE
+    - tablespace_reference:
+        identifier: foo
+    - keyword: OWNED
+    - keyword: BY
+    - role_reference:
+        identifier: '"role_1"'
+    - comma: ','
+    - role_reference:
+        identifier: '"account_admin"'
+    - comma: ','
+    - role_reference:
+        identifier: '"steve"'
     - keyword: SET
     - keyword: TABLESPACE
     - tablespace_reference:
