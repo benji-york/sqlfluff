@@ -16,3 +16,7 @@ ALTER INDEX foo ALTER 4 SET STATISTICS 7;
 
 ALTER INDEX ALL IN TABLESPACE foo OWNED BY role_1, account_admin, steve
 SET TABLESPACE bar NOWAIT;
+
+-- roles can be double-quoted
+ALTER INDEX ALL IN TABLESPACE foo OWNED BY "role_1", "account_admin", "steve"
+SET TABLESPACE bar NOWAIT;

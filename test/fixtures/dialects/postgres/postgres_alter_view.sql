@@ -51,3 +51,5 @@ ALTER VIEW myview RESET ( view_option_name );
 ALTER VIEW myview RESET ( view_option_name, view_option_name2 );
 ALTER VIEW IF EXISTS myview RESET ( view_option_name );
 ALTER VIEW IF EXISTS myview RESET ( view_option_name, view_option_name2 );
+-- view names and options can be quoted
+ALTER VIEW IF EXISTS "myview" RESET ( "view_option_name", "view_option_name2" );
